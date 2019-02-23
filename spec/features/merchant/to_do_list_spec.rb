@@ -4,9 +4,9 @@ RSpec.describe 'As a merchant', type: :feature do
   context 'In the dashboard, there/s a todo list' do
     before :each do
       @merchant = create(:merchant)
-      @item_1 = create(:item, user: @merchant, image: "https://vignette.wikia.nocookie.net/zeldaocarinaoftime/images/b/bf/Bomb_%28Ocarina_of_Time%29.png/revision/latest/scale-to-width-down/180?cb=20120826153735")
-      @item_2 = create(:item, user: @merchant)
-      @item_3 = create(:item, user: @merchant)
+      @item_1 = create(:item, name: "Item 1", user: @merchant, image: "https://vignette.wikia.nocookie.net/zeldaocarinaoftime/images/b/bf/Bomb_%28Ocarina_of_Time%29.png/revision/latest/scale-to-width-down/180?cb=20120826153735")
+      @item_2 = create(:item, name: "Item 2", user: @merchant)
+      @item_3 = create(:item, name: "Item 3", user: @merchant)
     end
     describe 'if I have items with placeholder images' do
       it 'shows all items that need an image' do

@@ -113,13 +113,15 @@
 <p>
 <section id="to-do-list">
   <h4>To Do List</h4>
+  <ol>
   <% if @need_images %>
-    <ul id="need-images">
+      <li><h5>The following items have placeholder images. Please click on them to edit and add a valid image</h5></li>
+      <ul id="need-images">
       <% @need_images.each do |item|%>
-      <h5>Items That Need Images:</h5>
       <li> <%= link_to item.name, edit_dashboard_item_path(item)  %> </li>
       <% end %>
     </ul>
     <% end %>
+  </ol>
 </section>
 </p>
