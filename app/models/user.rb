@@ -156,6 +156,5 @@ class User < ApplicationRecord
     items.joins(:order_items)
          .where(order_items: {fulfilled: false})
          .sum('order_items.quantity * order_items.price')
-
   end
 end
