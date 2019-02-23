@@ -5,14 +5,15 @@ RSpec.describe 'As a merchant', type: :feature do
     before :each do
       @merchant = create(:merchant)
       @item_1 = create(:item, user: @merchant, image: "https://vignette.wikia.nocookie.net/zeldaocarinaoftime/images/b/bf/Bomb_%28Ocarina_of_Time%29.png/revision/latest/scale-to-width-down/180?cb=20120826153735")
-      binding.pry
       @item_2 = create(:item, user: @merchant)
-      @item_3 = @merchant.items.create(:item)
+      @item_3 = create(:item, user: @merchant)
     end
     describe 'if I have items with placeholder images' do
       it 'shows all items that need an image' do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
         visit dashboard_path(@merchant)
-        within "#to-do-list" do
+
+        within("#to-do-list") do
           expect(page).to have_content("To Do List")
           within "#need-images" do
             expect(page).to have_content(@item_2.name)
@@ -22,8 +23,10 @@ RSpec.describe 'As a merchant', type: :feature do
 
       end
       it 'each item is a link to the item/s edit page' do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
         visit dashboard_path(@merchant)
-        within "#to-do-list" do
+        
+        within("#to-do-list") do
           expect(page).to have_content("To Do List")
           within "#need-images" do
             expect(page).to have_link(@item_2.name)

@@ -111,12 +111,12 @@ RSpec.describe User, type: :model do
       u6 = create(:user, state: "IA", city: "Des Moines")
       @m1 = create(:merchant)
       @m2 = create(:merchant)
-      @i1 = create(:item, merchant_id: @m1.id, inventory: 20)
-      @i2 = create(:item, merchant_id: @m1.id, inventory: 20)
-      @i3 = create(:item, merchant_id: @m1.id, inventory: 20)
+      @i1 = create(:item, merchant_id: @m1.id, inventory: 20, image: "https://vignette.wikia.nocookie.net/zeldaocarinaoftime/images/b/bf/Bomb_%28Ocarina_of_Time%29.png/revision/latest/scale-to-width-down/180?cb=20120826153735")
+      @i2 = create(:item, merchant_id: @m1.id, inventory: 20, image: "https://vignette.wikia.nocookie.net/zeldaocarinaoftime/images/b/bf/Bomb_%28Ocarina_of_Time%29.png/revision/latest/scale-to-width-down/180?cb=20120826153735")
+      @i3 = create(:item, merchant_id: @m1.id, inventory: 20, image: "https://vignette.wikia.nocookie.net/zeldaocarinaoftime/images/b/bf/Bomb_%28Ocarina_of_Time%29.png/revision/latest/scale-to-width-down/180?cb=20120826153735")
       @i4 = create(:item, merchant_id: @m1.id, inventory: 20)
       @i5 = create(:item, merchant_id: @m1.id, inventory: 20)
-      @i6 = create(:item, merchant_id: @m1.id, inventory: 20)
+      @i6 = create(:item, merchant_id: @m1.id, inventory: 20, image: "https://vignette.wikia.nocookie.net/zeldaocarinaoftime/images/b/bf/Bomb_%28Ocarina_of_Time%29.png/revision/latest/scale-to-width-down/180?cb=20120826153735")
       @i7 = create(:item, merchant_id: @m1.id, inventory: 20)
       @i9 = create(:item, merchant_id: @m1.id, inventory: 20)
       @i8 = create(:item, merchant_id: @m2.id, inventory: 20)
@@ -205,6 +205,11 @@ RSpec.describe User, type: :model do
       expect(@m1.top_users_by_money_spent(3)[1].total).to eq(36.0)
       expect(@m1.top_users_by_money_spent(3)[2].name).to eq(@u1.name)
       expect(@m1.top_users_by_money_spent(3)[2].total).to eq(33.0)
+    end
+
+    it '.items_that_need_images' do
+      expect(@m1.items_that_need_images).to eq([@i4, @i5, @i7, @i9])
+
     end
   end
 end

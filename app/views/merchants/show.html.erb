@@ -108,3 +108,18 @@
     </tbody>
   </table>
 <% end %>
+
+
+<p>
+<section id="to-do-list">
+  <h4>To Do List</h4>
+  <% if @need_images %>
+    <ul id="need-images">
+      <% @need_images.each do |item|%>
+      <h5>Items That Need Images:</h5>
+      <li> <%= item.name %> </li>
+      <% end %>
+    </ul>
+    <% end %>
+</section>
+</p>
