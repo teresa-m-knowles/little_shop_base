@@ -116,12 +116,17 @@
   <ol>
   <% if @need_images %>
       <li><h5>The following items have placeholder images. Please click on them to edit and add a valid image</h5></li>
-      <ul id="need-images">
+    <ul id="need-images">
       <% @need_images.each do |item|%>
       <li> <%= link_to item.name, edit_dashboard_item_path(item)  %> </li>
       <% end %>
     </ul>
     <% end %>
+
+  <% if @pending_orders %>
+  <% binding.pry %>
+      <li><h5>You have <%= @pending_orders.count %> unfulfilled orders worth <%= number_to_currency(@) %></h5></li>
+  <% end %>
   </ol>
 </section>
 </p>

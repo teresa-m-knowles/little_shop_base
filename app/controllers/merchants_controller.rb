@@ -18,6 +18,7 @@ class MerchantsController < ApplicationController
   def show
     @merchant = current_user
     @pending_orders = Order.pending_orders_for_merchant(current_user.id)
+    @missed_revenue = order_items_for_merchant(@merchant.id).sum('price * quantity')
     @need_images = @merchant.items_that_need_images
   end
 end
