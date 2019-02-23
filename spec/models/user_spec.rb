@@ -208,7 +208,12 @@ RSpec.describe User, type: :model do
     end
 
     it '.items_that_need_images' do
-      expect(@m1.items_that_need_images).to eq([@i4, @i5, @i7, @i9])
+      # [@i4, @i5, @i7, @i9]
+      expect(@m1.items_that_need_images[0].name).to eq(@i4.name)
+      expect(@m1.items_that_need_images[1].name).to eq(@i5.name)
+      expect(@m1.items_that_need_images[2].name).to eq(@i7.name)
+      expect(@m1.items_that_need_images[3].name).to eq(@i9.name)
+      expect(@m1.items_that_need_images.count).to eq(4)
     end
   end
 end
