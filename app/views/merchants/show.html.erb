@@ -117,7 +117,7 @@
     <ul id="need-images">
       <% @need_images.each do |item|%>
       <h5>Items That Need Images:</h5>
-      <li> <%= item.name %> </li>
+      <li> <%= link_to item.name, edit_dashboard_item_path(item)  %> </li>
       <% end %>
     </ul>
     <% end %>

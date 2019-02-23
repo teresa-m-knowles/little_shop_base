@@ -25,7 +25,7 @@ RSpec.describe 'As a merchant', type: :feature do
       it 'each item is a link to the item/s edit page' do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
         visit dashboard_path(@merchant)
-        
+
         within("#to-do-list") do
           expect(page).to have_content("To Do List")
           within "#need-images" do
@@ -34,7 +34,7 @@ RSpec.describe 'As a merchant', type: :feature do
             click_link @item_2.name
           end
         end
-        expect(current).to eq(edit_dashboard_item(@item_2))
+        expect(current_path).to eq(edit_dashboard_item_path(@item_2))
       end
     end
     describe 'if I have unfulfilled items' do
