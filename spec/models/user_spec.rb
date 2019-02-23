@@ -209,7 +209,6 @@ RSpec.describe User, type: :model do
 
     it '.items_that_need_images' do
       expect(@m1.items_that_need_images).to eq([@i4, @i5, @i7, @i9])
-
     end
   end
 end
