@@ -11,6 +11,7 @@ class OrderItem < ApplicationRecord
     greater_than_or_equal_to: 1
   }
 
+
   def subtotal
     quantity * price
   end
