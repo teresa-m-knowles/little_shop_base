@@ -59,7 +59,6 @@ RSpec.describe 'As a merchant', type: :feature do
     describe 'if I have pending orders that my stock cannot cover' do
       it 'if I have enough inventory, I receive a good news notice' do
         visit dashboard_path(@merchant)
-        save_and_open_page
         within "#order-#{@pending_order_1.id}" do
           expect(page).to have_content("Good news! You have enough inventory to fulfill this order.")
         end
@@ -91,12 +90,27 @@ RSpec.describe 'As a merchant', type: :feature do
         within "#order-#{pending_order_4.id}" do
           expect(page).to have_content("Not enough in stock to fulfill this order")
         end
-
-
       end
     end
     describe 'if I have multiple orders for an item that collectively exceed my stock for that item' do
       it 'I should see a warning message letting me know that the sum of those orders exceed my stock' do
+        OrderItem.destroy_all
+        Item.destroy_all
+        Order.destroy_all
+        visit root_path
+
+        new_item = create(:item, name: "Ocarina of Time", inventory: 10, user: @merchant)
+        pending_order_4 = create(:order, user: @customer)
+        pending_order_5 = create(:order, user: @customer)
+        oi4 = create(:order_item, order: pending_order_4, item: new_item, quantity: 7)
+        oi5 = create(:order_item, order: pending_order_5, item: new_item, quantity: 4)
+
+        visit dashboard_path(@merchant)
+
+        within('#pending-orders') do
+          expect(page).to have_content("Several orders combined exceed your current inventory. You cannot fulfill them all.")
+        end
+
       end
     end
   end
