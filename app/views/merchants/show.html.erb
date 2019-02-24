@@ -94,6 +94,7 @@
         <th>Created Date</th>
         <th>Quantity</th>
         <th>Price</th>
+        <th>Stock</th>
       </tr>
     </thead>
     <tbody>
@@ -103,6 +104,12 @@
           <td><%= order.created_at %></td>
           <td><%= order.total_quantity_for_merchant(@merchant.id) %></td>
           <td><%= order.total_price_for_merchant(@merchant.id) %></td>
+        <% if order.not_enough_inventory_to_fulfill(@merchant.id) %>
+            <td>Not enough in stock to fulfill this order</td>
+        <% else %>
+           <td>Good news! You have enough inventory to fulfill this order.</td>
+        <% end %>
+
         </tr>
       <% end %>
     </tbody>
