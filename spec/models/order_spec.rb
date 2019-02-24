@@ -109,5 +109,28 @@ RSpec.describe Order, type: :model do
 
       expect(order.order_items_for_merchant(merchant1.id)).to eq([oi1, oi3])
     end
+
+    it '.not_enough_inventory_to_fulfill' do
+      merchant1 = create(:merchant)
+      merchant2 = create(:merchant)
+      customer = create(:user)
+      order = create(:order, user: customer)
+      item1 = create(:item, user: merchant1, inventory: 5)
+      item2 = create(:item, user: merchant2, inventory: 3)
+      item3 = create(:item, user: merchant1, inventory: 2)
+      item4 = create(:item, user: merchant2, inventory: 2)
+      oi1 = create(:order_item, order: order, item: item1, quantity: 5)
+      oi2 = create(:order_item, order: order, item: item2, quantity: 4)
+      oi3 = create(:order_item, order: order, item: item3, quantity: 6)
+      oi4 = create(:order_item, order: order, item: item4, quantity: 3)
+
+      expect(order.not_enough_inventory_to_fulfill(merchant1)[0]).to eq(oi3)
+      expect(order.not_enough_inventory_to_fulfill(merchant2)[0]).to eq(oi2)
+      expect(order.not_enough_inventory_to_fulfill(merchant2)[1]).to eq(oi4)
+
+
+    end
+
+
   end
 end
