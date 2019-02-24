@@ -28,4 +28,10 @@ class OrderItem < ApplicationRecord
       save
     end
   end
+
+  # def self.combined_not_enough_stock(merchant_id)
+  #     self.joins(orders: :items)
+  #         .where(fulfilled: false, items: {merchant_id: merchant_id} )
+  #         .group('items.id').having('quantity > items.inventory')
+  # end
 end

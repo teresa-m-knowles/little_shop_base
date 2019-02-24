@@ -20,6 +20,7 @@ item_1 = create(:item, user: merchant_1)
 item_2 = create(:item, user: merchant_2)
 item_3 = create(:item, user: merchant_3)
 item_4 = create(:item, user: merchant_4)
+item_5 = create(:item, user: merchant_1, inventory: 5)
 create_list(:item, 10, user: merchant_1)
 
 inactive_item_1 = create(:inactive_item, user: merchant_1)
@@ -47,7 +48,13 @@ order = create(:completed_order, user: user)
 create(:fulfilled_order_item, order: order, item: item_1, price: 1, quantity: 1, created_at: (rng.rand(4)+1).days.ago, updated_at: rng.rand(59).minutes.ago)
 create(:fulfilled_order_item, order: order, item: item_2, price: 2, quantity: 1, created_at: (rng.rand(23)+1).hour.ago, updated_at: rng.rand(59).minutes.ago)
 
+#new pending order, for item 5
+order = create(:order, user: user)
+create(:order_item, order: order, item: item_5, price: item_5.price, quantity: 3)
 
+#new pending order, for item 5
+order = create(:order, user: user)
+create(:order_item, order: order, item: item_5, price: item_5.price, quantity: 3)
 
 
 

@@ -133,6 +133,10 @@
   <% if @pending_orders %>
       <li id="missed-revenue"><h5>You have <%= @pending_orders.count %> unfulfilled orders worth <%= number_to_currency(@merchant.missed_revenue)%>.</h5></li>
   <% end %>
+
+  <% if @pending_orders.combined_not_enough_stock %>
+    <li> Several orders combined exceed your current inventory. You cannot fulfill them all.</li>
+  <% end %>
   </ol>
 </section>
 </p>

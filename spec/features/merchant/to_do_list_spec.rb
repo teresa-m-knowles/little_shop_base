@@ -97,7 +97,6 @@ RSpec.describe 'As a merchant', type: :feature do
         OrderItem.destroy_all
         Item.destroy_all
         Order.destroy_all
-        visit root_path
 
         new_item = create(:item, name: "Ocarina of Time", inventory: 10, user: @merchant)
         pending_order_4 = create(:order, user: @customer)
@@ -107,8 +106,8 @@ RSpec.describe 'As a merchant', type: :feature do
 
         visit dashboard_path(@merchant)
 
-        within('#pending-orders') do
-          expect(page).to have_content("Several orders combined exceed your current inventory. You cannot fulfill them all.")
+        within('#to-do-list') do
+          expect(page).to have_content("Several orders combined exceed your current inventory of #{new_item.name}. You cannot fulfill them all.")
         end
 
       end

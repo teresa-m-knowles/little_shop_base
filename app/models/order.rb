@@ -47,7 +47,7 @@ class Order < ApplicationRecord
   end
 
   def order_items_for_merchant(merchant_id)
-    order_items.joins('join items on items.id = order_items.item_id')
+    order_items.joins(:item)
                .where(items: {merchant_id: merchant_id})
   end
 
@@ -56,4 +56,16 @@ class Order < ApplicationRecord
                .where('items.merchant_id = ?', merchant_id)
                .where('items.inventory < quantity')
   end
+
+  # def self.combined_not_enough_stock(merchant_id)
+  #   joins(:order_items)
+  #       .select('orders.*, sum(order_items.quantity) as quantity')
+  #       .where(status: 1, order_items: {fulfilled: true})
+  #       .group(:id)
+  #       .order('quantity desc')
+  #
+  #     self.joins(:order_items)
+  #         .where(order_items: {fulfilled: false}, order_items: {merchant_id: merchant_id} )
+  #         .group('items.id').having('quantity > items.inventory')
+  # end
 end
