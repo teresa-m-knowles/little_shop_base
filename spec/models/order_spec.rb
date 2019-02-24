@@ -52,6 +52,40 @@ RSpec.describe Order, type: :model do
     it '.pending_orders_for_merchant' do
       expect(Order.pending_orders_for_merchant(@merchant.id)).to eq([@o8, @o9])
     end
+    # it '.combined_not_enough_stock' do
+    #   #returns an array of order items for orders for which a merchant does not have enough stock
+    #   OrderItem.destroy_all
+    #   Order.destroy_all
+    #   Item.destroy_all
+    #   User.destroy_all
+    #
+    #   merchant = create(:merchant)
+    #   different_merchant = create(:merchant)
+    #   customer = create(:user)
+    #
+    #   new_item = create(:item, name: "Ocarina of Time", inventory: 11, user: merchant)
+    #   diff_item = create(:item, name: "Majora's Mask", inventory: 10, user: different_merchant)
+    #   pending_order_1 = create(:order, user: customer)
+    #   pending_order_2 = create(:order, user: customer)
+    #   orders = [pending_order_1, pending_order_2]
+    #
+    #   #order 1 and order2 combined have a quantity of 13, which is more than the new item inventory
+    #   oi1 = create(:order_item, order: pending_order_1, item: new_item, quantity: 3)
+    #   oi2 = create(:order_item, order: pending_order_2, item: new_item, quantity: 6)
+    #   oi3 = create(:order_item, order: pending_order_1, item: new_item, quantity: 4)
+    #
+    #
+    #   #order 1 and order 2 combined have a quantity of 11, which is more than the diff item inventory
+    #   oi4 = create(:order_item, order: pending_order_1, item: diff_item, quantity: 6)
+    #   oi5 = create(:order_item, order: pending_order_2, item: diff_item, quantity: 5)
+    #   binding.pry
+    #   expect(OrderItem.combined_not_enough_stock(merchant.id)[0]).to eq(oi1)
+    #   expect(OrderItem.combined_not_enough_stock(merchant.id)[1]).to eq(oi1)
+    #   expect(OrderItem.combined_not_enough_stock(merchant.id)[2]).to eq(oi3)
+    #
+    #   expect(OrderItem.combined_not_enough_stock(different_merchant.id)[0]).to eq(oi4)
+    #   expect(OrderItem.combined_not_enough_stock(different_merchant.id)[1]).to eq(oi5)
+    # end
   end
 
   describe 'instance methods' do
@@ -96,6 +130,12 @@ RSpec.describe Order, type: :model do
     end
 
     it '.order_items_for_merchant' do
+      OrderItem.destroy_all
+      Order.destroy_all
+      Item.destroy_all
+      User.destroy_all
+
+
       merchant1 = create(:merchant)
       merchant2 = create(:merchant)
       user = create(:user)
