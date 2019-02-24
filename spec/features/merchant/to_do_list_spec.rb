@@ -12,9 +12,9 @@ RSpec.describe 'As a merchant', type: :feature do
       @pending_order_1 = create(:order, user: @customer)
       @pending_order_2 = create(:order, user: @customer)
       @pending_order_3 = create(:order, user: @customer)
-      create(:order_item, order: @pending_order_1, item: @item_1, quantity: 5, price: 28.99)
-      create(:order_item, order: @pending_order_2, item: @item_2, quantity: 5, price: 55.32)
-      create(:order_item, order: @pending_order_3, item: @item_3, quantity: 5, price: 23.17)
+      @oi1 = create(:order_item, order: @pending_order_1, item: @item_1, quantity: 5, price: 28.99)
+      @oi2 = create(:order_item, order: @pending_order_2, item: @item_2, quantity: 5, price: 55.32)
+      @oi3 = create(:order_item, order: @pending_order_3, item: @item_3, quantity: 5, price: 23.17)
 
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
       visit dashboard_path(@merchant)
@@ -58,6 +58,43 @@ RSpec.describe 'As a merchant', type: :feature do
     end
     describe 'if I have pending orders that my stock cannot cover' do
       it 'next to the order, I see a warning if an item quantity exceeds my current stock' do
+        visit dashboard_path(@merchant)
+        within "#order-#{pending_order_1.id}" do
+          expect(page).to have_content("Good news! You have enough inventory to fulfill this order.")
+        end
+
+        visit root_path
+
+        #fulfill order_items for orders 1,2,and 3 and mark orders as completed
+        @oi1.fulfill
+        @oi1.order.status = :completed
+        @oi1.order.save
+        @oi2.fulfill
+        @oi2.order.status = :completed
+        @oi2.order.save
+        @oi3.fulfill
+        @oi3.order.status = :completed
+        @oi3.order.save
+        #now item 1, 2 and 3 have 5 items in stock
+
+        visit dashboard_path(@merchant)
+
+        pending_order_4 = create(:order, user: @customer)
+        oi4 = create(:order_item, order: pending_order_4, item: @item_3, quantity: 10, price: 23.17)
+
+        pending_order_5 = create(:order, user: @customer)
+        oi5 = create(:order_item, order: pending_order_5, item: @item_3, quantity: 7, price: 23.17)
+
+        visit dashboard_path(@merchant)
+        save_and_open_page
+        within "#order-#{pending_order_4.id}" do
+          expect(page).to have_content("Not enough in stock to fulfill this order")
+        end
+
+        within "#order-#{pending_order_5.id}" do
+          expect(page).to have_content("Not enough in stock to fulfill this order")
+        end
+
 
       end
     end
