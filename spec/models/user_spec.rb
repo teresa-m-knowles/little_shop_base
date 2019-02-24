@@ -111,12 +111,12 @@ RSpec.describe User, type: :model do
       u6 = create(:user, state: "IA", city: "Des Moines")
       @m1 = create(:merchant)
       @m2 = create(:merchant)
-      @i1 = create(:item, merchant_id: @m1.id, inventory: 20)
-      @i2 = create(:item, merchant_id: @m1.id, inventory: 20)
-      @i3 = create(:item, merchant_id: @m1.id, inventory: 20)
+      @i1 = create(:item, merchant_id: @m1.id, inventory: 20, image: "https://vignette.wikia.nocookie.net/zeldaocarinaoftime/images/b/bf/Bomb_%28Ocarina_of_Time%29.png/revision/latest/scale-to-width-down/180?cb=20120826153735")
+      @i2 = create(:item, merchant_id: @m1.id, inventory: 20, image: "https://vignette.wikia.nocookie.net/zeldaocarinaoftime/images/b/bf/Bomb_%28Ocarina_of_Time%29.png/revision/latest/scale-to-width-down/180?cb=20120826153735")
+      @i3 = create(:item, merchant_id: @m1.id, inventory: 20, image: "https://vignette.wikia.nocookie.net/zeldaocarinaoftime/images/b/bf/Bomb_%28Ocarina_of_Time%29.png/revision/latest/scale-to-width-down/180?cb=20120826153735")
       @i4 = create(:item, merchant_id: @m1.id, inventory: 20)
       @i5 = create(:item, merchant_id: @m1.id, inventory: 20)
-      @i6 = create(:item, merchant_id: @m1.id, inventory: 20)
+      @i6 = create(:item, merchant_id: @m1.id, inventory: 20, image: "https://vignette.wikia.nocookie.net/zeldaocarinaoftime/images/b/bf/Bomb_%28Ocarina_of_Time%29.png/revision/latest/scale-to-width-down/180?cb=20120826153735")
       @i7 = create(:item, merchant_id: @m1.id, inventory: 20)
       @i9 = create(:item, merchant_id: @m1.id, inventory: 20)
       @i8 = create(:item, merchant_id: @m2.id, inventory: 20)
@@ -140,6 +140,44 @@ RSpec.describe User, type: :model do
       @oi5.fulfill
       @oi6.fulfill
       @oi7.fulfill
+    end
+    it '.items_that_need_images' do
+      # should be [@i4, @i5, @i7, @i9]
+      expect(@m1.items_that_need_images[0].name).to eq(@i4.name)
+      expect(@m1.items_that_need_images[1].name).to eq(@i5.name)
+      expect(@m1.items_that_need_images[2].name).to eq(@i7.name)
+      expect(@m1.items_that_need_images[3].name).to eq(@i9.name)
+      expect(@m1.items_that_need_images.count).to eq(4)
+    end
+    it '.missed_revenue' do
+      #sum of all the pending orders order_items subtotals for a merchant
+
+      OrderItem.destroy_all
+      Order.destroy_all
+      Item.destroy_all
+      User.destroy_all
+
+      merchant = create(:merchant)
+      different_merchant = create(:merchant)
+      item_1 = create(:item, name: "Item 1", price: 50, inventory: 10, user: merchant, image: "https://vignette.wikia.nocookie.net/zeldaocarinaoftime/images/b/bf/Bomb_%28Ocarina_of_Time%29.png/revision/latest/scale-to-width-down/180?cb=20120826153735")
+      item_2 = create(:item, name: "Item 2", price: 20, inventory: 10, user: merchant)
+      item_3 = create(:item, name: "Item 3", price: 70, inventory: 10, user: merchant)
+      item_4 = create(:item, name: "Item 3", price: 70, inventory: 10, user: different_merchant)
+
+      customer = create(:user)
+      pending_order_1 = create(:order, user: customer)
+      pending_order_2 = create(:order, user: customer)
+      pending_order_3 = create(:order, user: customer)
+      pending_order_4 = create(:order, user: customer)
+      completed_order_5 = create(:completed_order, user: customer)
+      create(:order_item, order: pending_order_1, item: item_1, quantity: 5, price: 50)
+      create(:order_item, order: pending_order_2, item: item_2, quantity: 5, price: 20)
+      create(:order_item, order: pending_order_3, item: item_3, quantity: 5, price: 70)
+      create(:order_item, order: pending_order_4, item: item_4, quantity: 5, price: 70)
+      create(:order_item, order: completed_order_5, fulfilled: true, item: item_2, quantity: 5, price: 70)
+
+      expect(merchant.missed_revenue.to_f).to eq(700)
+
     end
 
     it '.top_items_sold_by_quantity' do
@@ -206,5 +244,6 @@ RSpec.describe User, type: :model do
       expect(@m1.top_users_by_money_spent(3)[2].name).to eq(@u1.name)
       expect(@m1.top_users_by_money_spent(3)[2].total).to eq(33.0)
     end
+
   end
 end

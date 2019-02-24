@@ -94,6 +94,7 @@
         <th>Created Date</th>
         <th>Quantity</th>
         <th>Price</th>
+        <th>Stock</th>
       </tr>
     </thead>
     <tbody>
@@ -103,8 +104,35 @@
           <td><%= order.created_at %></td>
           <td><%= order.total_quantity_for_merchant(@merchant.id) %></td>
           <td><%= order.total_price_for_merchant(@merchant.id) %></td>
+        <% if order.not_enough_inventory_to_fulfill(@merchant.id) %>
+            <td>Not enough in stock to fulfill this order</td>
+        <% else %>
+           <td>Good news! You have enough inventory to fulfill this order.</td>
+        <% end %>
+
         </tr>
       <% end %>
     </tbody>
   </table>
 <% end %>
+
+
+<p>
+<section id="to-do-list">
+  <h4>To Do List</h4>
+  <ol>
+  <% if @merchant.items_that_need_images %>
+      <li><h5>The following items have placeholder images. Please click on them to edit and add a valid image</h5></li>
+    <ul id="need-images">
+      <% @merchant.items_that_need_images.each do |item|%>
+      <li> <%= link_to item.name, edit_dashboard_item_path(item)  %> </li>
+      <% end %>
+    </ul>
+    <% end %>
+
+  <% if @pending_orders %>
+      <li id="missed-revenue"><h5>You have <%= @pending_orders.count %> unfulfilled orders worth <%= number_to_currency(@merchant.missed_revenue)%>.</h5></li>
+  <% end %>
+  </ol>
+</section>
+</p>

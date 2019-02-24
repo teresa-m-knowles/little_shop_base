@@ -15,6 +15,7 @@ RSpec.describe OrderItem, type: :model do
   end
 
   describe 'instance methods' do
+    
     it '.subtotal' do
       oi = create(:order_item, quantity: 5, price: 3)
 

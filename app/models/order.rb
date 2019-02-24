@@ -50,4 +50,10 @@ class Order < ApplicationRecord
     order_items.joins('join items on items.id = order_items.item_id')
                .where(items: {merchant_id: merchant_id})
   end
+
+  def not_enough_inventory_to_fulfill(merchant_id)
+    order_items.joins(:item)
+               .where('items.merchant_id = ?', merchant_id)
+               .where('items.inventory < quantity')
+  end
 end

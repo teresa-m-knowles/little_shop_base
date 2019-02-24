@@ -147,4 +147,14 @@ class User < ApplicationRecord
          .order('total DESC')
          .limit(limit)
   end
+
+  def items_that_need_images
+    items.where("image like ?", "%https://picsum.photos/200/300?image=%")
+  end
+
+  def missed_revenue
+    items.joins(:order_items)
+         .where(order_items: {fulfilled: false})
+         .sum('order_items.quantity * order_items.price')
+  end
 end
