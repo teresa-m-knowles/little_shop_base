@@ -18,6 +18,5 @@ class MerchantsController < ApplicationController
   def show
     @merchant = current_user
     @pending_orders = Order.pending_orders_for_merchant(current_user.id)
-    @need_images = @merchant.items_that_need_images
   end
 end
