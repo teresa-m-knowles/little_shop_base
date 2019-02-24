@@ -57,12 +57,14 @@ RSpec.describe 'As a merchant', type: :feature do
       end
     end
     describe 'if I have pending orders that my stock cannot cover' do
-      it 'next to the order, I see a warning if an item quantity exceeds my current stock' do
+      it 'if I have enough inventory, I receive a good news notice' do
         visit dashboard_path(@merchant)
-        within "#order-#{pending_order_1.id}" do
+        save_and_open_page
+        within "#order-#{@pending_order_1.id}" do
           expect(page).to have_content("Good news! You have enough inventory to fulfill this order.")
         end
-
+      end
+      it 'next to the order, I see a warning if an item quantity exceeds my current stock' do
         visit root_path
 
         #fulfill order_items for orders 1,2,and 3 and mark orders as completed
@@ -86,12 +88,7 @@ RSpec.describe 'As a merchant', type: :feature do
         oi5 = create(:order_item, order: pending_order_5, item: @item_3, quantity: 7, price: 23.17)
 
         visit dashboard_path(@merchant)
-        save_and_open_page
         within "#order-#{pending_order_4.id}" do
-          expect(page).to have_content("Not enough in stock to fulfill this order")
-        end
-
-        within "#order-#{pending_order_5.id}" do
           expect(page).to have_content("Not enough in stock to fulfill this order")
         end
 
