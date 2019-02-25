@@ -7,7 +7,7 @@ RSpec.describe 'As a merchant' do
       discount_1 = merchant.discounts.create!(discount_type: 0, discount_amount: 50, quantity_for_discount: 100)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
       visit dashboard_discount_path(discount_1)
-      save_and_open_page
+      
       expect(page).to have_content(discount_1.id)
       expect(page).to have_content("Type: Dollar")
       expect(page).to have_content("Quantity for discount: #{discount_1.quantity_for_discount}")

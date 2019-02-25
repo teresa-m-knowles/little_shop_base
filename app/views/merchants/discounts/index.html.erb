@@ -13,7 +13,7 @@
   <tbody>
     <% @discounts.each do |discount| %>
     <tr id="discount-<%=discount.id %>">
-      <td> <%= discount.id %> </td>
+      <td> <%= link_to discount.id, dashboard_discount_path(discount)  %> </td>
       <td> <%= discount.discount_type %> </td>
       <td> <%= discount.quantity_for_discount %> </td>
       <td> <%= discount.discount_amount %> </td>

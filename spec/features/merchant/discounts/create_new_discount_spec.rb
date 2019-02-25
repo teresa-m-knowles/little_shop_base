@@ -22,7 +22,7 @@ RSpec.describe 'create new discount', type: :feature do
       it 'If I create a new discount, I get a success message' do
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
         visit new_dashboard_discount_path
-        choose(option: 'percentage')
+        choose(option: 'dollar')
         fill_in "Discount amount", with: 150
         fill_in "Quantity for discount", with: 200
         click_on "Create Discount"
@@ -54,6 +54,46 @@ RSpec.describe 'create new discount', type: :feature do
         click_on "Create Discount"
         expect(page).to_not have_content("New discount created")
         expect(page).to have_content("Discount type can't be blank")
+      end
+
+      context 'If I have discounts in my system' do
+        it 'any new discounts have to be of the same type' do
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
+          visit new_dashboard_discount_path
+          #choose wrong type:
+          choose(option: 'percentage')
+          fill_in "Discount amount", with: 150
+          fill_in "Quantity for discount", with: 200
+          click_on "Create Discount"
+
+          expect(page).to_not have_content("New discount created")
+          expect(page).to have_content("All of your discounts need to be of the same type.")
+
+
+
+        end
+      end
+
+      context 'if I have no discounts in my system' do
+        it 'any new discounts can be of any type' do
+          Discount.destroy_all
+
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
+          visit new_dashboard_discount_path
+          choose(option: 'percentage')
+          fill_in "Discount amount", with: 150
+          fill_in "Quantity for discount", with: 200
+          click_on "Create Discount"
+
+          discount = Discount.last
+
+          expect(@merchant.discounts.last).to eq(discount)
+          expect(current_path).to eq(dashboard_discounts_path)
+          expect(page).to have_content(discount.id)
+          expect(page).to have_content("New discount created")
+
+
+        end
       end
 
     end

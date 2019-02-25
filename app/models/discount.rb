@@ -1,4 +1,7 @@
 class Discount < ApplicationRecord
+  include ActiveModel::Validations
+  validates_with DiscountValidator
+  
   enum discount_type: [:dollar, :percentage]
 
   belongs_to :user
