@@ -2,7 +2,7 @@ class Discount < ApplicationRecord
   enum discount_type: [:dollar, :percentage]
 
   belongs_to :user
-  validates_presence_of :type
+  validates_presence_of :discount_type
 
   validates :quantity_for_discount, presence: true, numericality: {
     only_integer: true,
