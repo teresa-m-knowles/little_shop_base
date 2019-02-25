@@ -16,7 +16,44 @@ RSpec.describe 'create new discount', type: :feature do
 
         expect(page).to have_link("Create New Discount")
         click_link "Create New Discount"
-        expect(current_path).to eq()
+        expect(current_path)
+      end
+
+      it 'If I create a new discount, I get a success message' do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
+        visit new_dashboard_discount_path
+        choose(option: 'percentage')
+        fill_in "Discount amount", with: 150
+        fill_in "Quantity for discount", with: 200
+        click_on "Create Discount"
+
+        discount = Discount.last
+
+        expect(@merchant.discounts.last).to eq(discount)
+        expect(current_path).to eq(dashboard_discounts_path)
+        expect(page).to have_content(discount.id)
+        expect(page).to have_content("New discount created")
+      end
+
+      it 'if I create a discount with wrong information I get an error message' do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
+        visit new_dashboard_discount_path
+        choose(option: "dollar")
+        fill_in "Discount amount", with: "string"
+        fill_in "Quantity for discount", with: 200
+        click_on "Create Discount"
+        expect(page).to_not have_content("New discount created")
+        expect(page).to have_content("Discount amount is not a number")
+      end
+
+      it 'I need to choose a discount type' do
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
+        visit new_dashboard_discount_path
+        fill_in "Discount amount", with: 5
+        fill_in "Quantity for discount", with: 200
+        click_on "Create Discount"
+        expect(page).to_not have_content("New discount created")
+        expect(page).to have_content("Discount type can't be blank")
       end
 
     end

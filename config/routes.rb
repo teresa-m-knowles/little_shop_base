@@ -28,13 +28,12 @@ Rails.application.routes.draw do
   scope :dashboard, as: :dashboard do
     get '/', to: 'merchants#show'
     resources :items, module: :merchants
+    resources :discounts, only: [:index, :new, :create], module: :merchants
     put '/items/:id/enable', to: 'merchants/items#enable', as: :enable_item
     put '/items/:id/disable', to: 'merchants/items#disable', as: :disable_item
     get '/orders/:id', to: 'merchants/orders#show', as: :order
     put '/order_items/:id', to: 'merchants/order_items#update', as: :fulfill_order_item
   end
-
-  resources :discounts, only: [:index, :new], module: :merchants
 
   resources :merchants, only: [:index, :show]
 

@@ -14,7 +14,7 @@ RSpec.describe 'As a merchant' do
 
       expect(page).to have_link("View My Discounts")
       click_link "View My Discounts"
-      expect(current_path).to eq(discounts_path)
+      expect(current_path).to eq(dashboard_discounts_path)
     end
 
     it "I see the discount's type, quantity and amount" do
