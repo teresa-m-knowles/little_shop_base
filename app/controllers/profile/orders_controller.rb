@@ -11,6 +11,7 @@ class Profile::OrdersController < ApplicationController
     @cart.items.each do |item|
       order.order_items.create!(
         item: item,
+        #price: @cart.price_with_discount(item)
         price: item.price,
         quantity: @cart.count_of(item.id),
         fulfilled: false)

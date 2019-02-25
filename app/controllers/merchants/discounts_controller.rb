@@ -27,7 +27,7 @@ class Merchants::DiscountsController < ApplicationController
       else
         render :new
       end
-  
+
   end
 
   def edit
@@ -41,6 +41,7 @@ class Merchants::DiscountsController < ApplicationController
       flash[:success] = "You have updated the discount"
       redirect_to dashboard_discount_path(@discount)
     else
+      @form_path = [:dashboard, @discount]
       render :edit
     end
 

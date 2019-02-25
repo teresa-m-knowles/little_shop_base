@@ -33,14 +33,68 @@ class Cart
     subtract_item(item_id, count_of(item_id))
   end
 
-  def subtotal(item_id)
-    item = Item.find(item_id)
-    item.price * count_of(item_id)
+  #group all items by merchant id and add their subtotals
+  def get_dollar_discounts
+    merchant_id_subtotal = Hash.new(0)
+
+    @contents.keys.each do |item_id|
+      item = Item.find(item_id.to_i)
+      merchant_id_subtotal[item.merchant_id] += subtotal(item_id)
+    end
+
+    merchant_id_subtotal.each do |merchant_id, quantity|
+      merchant = User.find(merchant_id)
+      if !merchant.discounts.empty?
+        discount = Discount.get_dollar_discount(merchant_id, quantity)
+      else
+        return nil
+      end
+      return discount
+    end
+
+
+
+
+
   end
 
+  def subtotal(item_id)
+    item = Item.find(item_id)
+
+    # if merchant.discounts.empty?
+      total = item.price * count_of(item_id)
+    # else
+    #   type = merchant.discounts.pluck(:discount_type).first
+    #   if type == 'dollar'
+    #     total = item.price * count_of(item_id)
+    #     discount = Discount.dollar_check(item, total)
+    #     #should return nil if no dollar discount applies or the biggest dollar discount possible if it does
+    #     total -= discount.discount_amount
+    #
+    #   elsif type == 'percentage'
+    #     discount = Discount.percentage_check(item, count_of(item))
+    #     #should return nil if no % discount applies or the biggest % discount possible if it does
+    #     total = item.price * count_of(item_id)
+    #     total_discount = (discount.discount_amount/100) * total
+    #     total -= total_discount
+    #   end
+    # end
+   return total
+  end
+
+
+
+
   def grand_total
-    @contents.keys.map do |item_id|
+    total = @contents.keys.map do |item_id|
       subtotal(item_id)
     end.sum
+
+    if get_dollar_discounts
+      total -= get_dollar_discounts.discount_amount
+    else
+      total
+    end
+    return total
   end
 end
