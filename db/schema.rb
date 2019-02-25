@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190225033048) do
+ActiveRecord::Schema.define(version: 20190225040710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "discounts", force: :cascade do |t|
-    t.integer "type"
+    t.integer "discount_type"
     t.integer "discount_amount"
-    t.integer "item_quantity_for_discount"
+    t.integer "quantity_for_discount"
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
