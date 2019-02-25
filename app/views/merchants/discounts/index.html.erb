@@ -9,7 +9,7 @@
   </thead>
   <tbody>
     <% @discounts.each do |discount| %>
-    <tr>
+    <tr id="discount-<%=discount.id %>">
       <td> <%= discount.id %> </td>
       <td> <%= discount.discount_type %> </td>
       <td> <%= discount.quantity_for_discount %> </td>
