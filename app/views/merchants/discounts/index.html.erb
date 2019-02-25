@@ -1,0 +1,21 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Discount ID</th>
+      <th scope="col">Type</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @discounts.each do |discount| %>
+    <tr>
+      <td> <%= discount.id %> </td>
+      <td> <%= discount.discount_type %> </td>
+      <td> <%= discount.quantity_for_discount %> </td>
+      <td> <%= discount.discount_amount %> </td>
+    </tr>
+    <% end %>
+
+  </tbody>
+</table>
