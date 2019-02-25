@@ -5,6 +5,11 @@ class Merchants::DiscountsController < ApplicationController
     @discounts = Discount.where(user: current_user)
   end
 
+  def show
+    @discount = Discount.find(params[:id])
+
+  end
+
   def new
     @discount = Discount.new
     @form_path = [:dashboard, @discount]

@@ -1,0 +1,5 @@
+<h1>Discount ID# <%= @discount.id %> </h1>
+<p>Type: <%= @discount.discount_type.capitalize %> </p>
+<p>Quantity for discount: <%= @discount.quantity_for_discount %> </p>
+<p>Discount amount: <%= @discount.discount_amount %> </p>
+<%= link_to "Edit", edit_dashboard_discount_path(@discount)  %>
