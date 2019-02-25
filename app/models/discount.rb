@@ -1,5 +1,5 @@
 class Discount < ApplicationRecord
-  belongs_to :user, foreign_key: 'merchant_id'
+  belongs_to :user
   validates_presence_of :type
 
   validates :item_quantity_for_discount, presence: true, numericality: {
