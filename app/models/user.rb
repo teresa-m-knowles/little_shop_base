@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :order_items, through: :orders
   # as a merchant
   has_many :items, foreign_key: 'merchant_id'
+  has_many :discounts
 
   validates_presence_of :name, :address, :city, :state, :zip
   validates :email, presence: true, uniqueness: true
@@ -149,7 +150,7 @@ class User < ApplicationRecord
   end
 
   def items_that_need_images
-    items.where("image like ?", "%https://picsum.photos/200/300?image=%")
+    items.where("image like ?", "https://picsum.photos/200/300?image=%")
   end
 
   def missed_revenue
