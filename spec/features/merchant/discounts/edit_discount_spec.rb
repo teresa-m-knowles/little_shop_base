@@ -23,21 +23,6 @@ RSpec.describe 'As a merchant', type: :feature do
 
     end
 
-    context 'if I just one discount in the system' do
-      it 'can change the discount type' do
-        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
-        visit edit_dashboard_discount_path(@discount_1)
-
-
-        choose(option: 'percentage')
-        click_on "Update Discount"
-
-        expect(page).to have_content("You have updated the discount")
-        expect(current_path).to eq(dashboard_discount_path(@discount_1))
-        expect(page).to have_content("Type: Percentage")
-
-      end
-    end
     context 'if I have other discounts in the system' do
       it 'the discount type has to match all other discounts' do
         discount_2 = @merchant.discounts.create!(discount_type: 0, discount_amount: 23, quantity_for_discount: 100)
@@ -48,7 +33,7 @@ RSpec.describe 'As a merchant', type: :feature do
 
         choose(option: 'percentage')
         click_on "Update Discount"
-        
+
         expect(page).to_not have_content("You have updated the discount")
         expect(page).to have_content("All of your discounts need to be of the same type.")
 

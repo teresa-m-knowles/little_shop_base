@@ -30,6 +30,13 @@ class Merchants::DiscountsController < ApplicationController
 
   end
 
+  def destroy
+    @discount = Discount.find(params[:id])
+    @discount.destroy
+    flash[:success] = "Discount deleted"
+    redirect_to dashboard_discounts_path
+  end
+  
   def edit
     @discount = Discount.find(params[:id])
     @form_path = [:dashboard, @discount]
@@ -52,5 +59,4 @@ class Merchants::DiscountsController < ApplicationController
   def discount_params
     params.require(:discount).permit(:discount_type, :discount_amount, :quantity_for_discount, :user)
   end
-
 end

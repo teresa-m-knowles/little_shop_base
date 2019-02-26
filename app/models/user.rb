@@ -151,6 +151,7 @@ class User < ApplicationRecord
 
   def items_that_need_images
     items.where("image like ?", "https://picsum.photos/200/300?image=%")
+         .order(id: :asc)
   end
 
   def missed_revenue

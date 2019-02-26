@@ -3,3 +3,4 @@
 <p>Quantity for discount: <%= @discount.quantity_for_discount %> </p>
 <p>Discount amount: <%= @discount.discount_amount %> </p>
 <%= link_to "Edit", edit_dashboard_discount_path(@discount)  %>
+<%= button_to "Delete", dashboard_discount_path(@discount), method: :delete, data: { confirm: "Are you sure?" }  %>
