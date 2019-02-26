@@ -11,8 +11,7 @@ class Profile::OrdersController < ApplicationController
     @cart.items.each do |item|
       order.order_items.create!(
         item: item,
-        #price: @cart.price_with_discount(item)
-        price: item.price,
+        price: @cart.subtotal_with_discount(item.id)/@cart.count_of(item.id),
         quantity: @cart.count_of(item.id),
         fulfilled: false)
     end

@@ -3,9 +3,6 @@
 <% if @cart.contents.empty? %>
   <p>Your cart is empty</p>
 <% else %>
-  <% if @cart.get_dollar_discounts %>
-  <p>Discount: -<%= number_to_currency(@cart.get_dollar_discounts.discount_amount) %></p>
-  <% end %>
   <p>Total: <%= number_to_currency(@cart.grand_total) %></p>
 
 
