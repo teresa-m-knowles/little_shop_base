@@ -30,6 +30,7 @@ RSpec.describe DiscountValidator do
         discount_1 = merchant_1.discounts.create(discount_type: 0, quantity_for_discount: 5, discount_amount: 10)
         discount_2 = merchant_2.discounts.create(discount_type: 1, quantity_for_discount: 5, discount_amount: 10)
 
+        expect(discount_1.errors.messages).to eq({})
         expect(discount_2.errors.messages).to eq({})
 
       end
