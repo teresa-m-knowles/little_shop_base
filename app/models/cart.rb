@@ -33,60 +33,57 @@ class Cart
     subtract_item(item_id, count_of(item_id))
   end
 
-  def get_dollar_discounts
-    merchant_id_subtotal = Hash.new(0)
 
-    @contents.keys.each do |item_id|
-      item = Item.find(item_id.to_i)
-      merchant_id_subtotal[item.merchant_id] += subtotal(item_id)
-    end
-
-    merchant_id_subtotal.each do |merchant_id, quantity|
-      merchant = User.find(merchant_id)
-      if !merchant.discounts.empty?
-        discount = Discount.get_dollar_discount(merchant_id, quantity)
-      else
-        return nil
-      end
-      return discount
-    end
-  end
-
-  def get_percentage_discounts
-    item_and_percentage = Hash.new(0)
-    @contents.each do |item_id, quantity|
-      item = Item.find(item_id.to_i)
-      item_and_percentage[item] = Discount.get_percentage_discount(item, quantity)
-    end
-    return item_and_percentage
-
-  end
-
-  def subtotal(item_id)
+  def subtotal_with_discount(item_id)
     item = Item.find(item_id)
-    total = 0
-    if get_percentage_discounts[item]
-      discount = get_percentage_discounts[item].discount_amount.to_f/100
-      without_discount = item.price * count_of(item_id)
-      discount_amount = without_discount * discount
-      total = without_discount - discount_amount
-    else
-      total = item.price * count_of(item_id)
-    end
-    return total
+    subtotal_without_discount(item_id) - calculate_discount(item)
+
   end
 
+  def subtotal_without_discount(item_id)
+    item = Item.find(item_id)
+    item.price * count_of(item_id)
+  end
 
+  def subtotal_from_same_merchant(item_id)
+    given_item = Item.find(item_id)
+    items_from_same_merchant = items.select do |item|
+        item.merchant_id == given_item.merchant_id
+      end
+    items_from_same_merchant.sum do |item|
+      subtotal_without_discount(item.id)
+    end
+  end
+
+  def calculate_discount(item)
+    discount = find_discount(item)
+    if discount ##if find_discount did not return nil, calculate the amount
+      if discount.discount_type == 'dollar'
+        return subtotal_without_discount - discount.discount_amount
+      elsif discount.discount_type =='percentage'
+        percentage_off = discount.discount_amount.to_f/100
+        return subtotal_without_discount(item.id) * percentage_off
+      end
+    else #if there is no discount, return 0
+      return 0
+    end
+  end
+
+  def find_discount(item)
+    unless item.user.discounts.empty?
+      if Discount.where(user: item.user, discount_type: 'dollar').exists?
+        return Discount.get_dollar_discount(item.merchant_id, subtotal_from_same_merchant(item.id))
+      elsif Discount.where(user: item.user, discount_type: 'percentage').exists?
+        return Discount.get_percentage_discount(item, count_of(item.id))
+      end
+    end
+  end
 
 
   def grand_total
-    total = @contents.keys.map do |item_id|
-      subtotal(item_id)
+    @contents.keys.map do |item_id|
+      subtotal_with_discount(item_id)
     end.sum
 
-    if get_dollar_discounts
-      total -= get_dollar_discounts.discount_amount
-    end
-    return total
   end
 end
