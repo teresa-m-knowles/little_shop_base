@@ -32,4 +32,5 @@ class Discount < ApplicationRecord
             .order('discount_amount desc')
             .first
   end
+
 end
