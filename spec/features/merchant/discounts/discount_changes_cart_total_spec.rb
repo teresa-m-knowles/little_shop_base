@@ -17,7 +17,7 @@ RSpec.describe 'As a registered user', type: :feature do
 
         end
 
-        it 'The bulk discount of dollar type shows up on my cart show page' do
+        it 'The bulk discount of dollar type shows up on my cart show page under each item' do
           visit item_path(@item_1)
           #Order subtotal is $5
           click_button "Add to Cart"
@@ -38,13 +38,19 @@ RSpec.describe 'As a registered user', type: :feature do
           #We get $10 off
 
           expect(page).to have_content("Total: $70.00")
-          expect(page).to have_content("Discount: -$10")
+
+          within("#item-#{@item_1.id}") do
+            expect(page).to have_content("Discount: -$5.00")
+          end
+
+          within("#item-#{@item_2.id}") do
+            expect(page).to have_content("Discount: -$5.00")
+          end
 
         end
 
         it 'I only get a discount from that one merchant' do
           other_merchant = create(:merchant)
-          other_merchant.discounts.create(discount_type: 0, discount_amount: 30, quantity_for_discount: 5)
           item_3 = create(:item, user: other_merchant, name: "Playstation", active: true, price: 20, inventory: 20)
 
           visit item_path(@item_1)
@@ -72,6 +78,10 @@ RSpec.describe 'As a registered user', type: :feature do
           visit cart_path
           #Order total is $100, minus the $10 discount is $90
           expect(page).to have_content "Total: $90.00 "
+
+          within("#item-#{item_3.id}") do
+            expect(page).to_not have_content("Discount:")
+          end
         end
 
       end

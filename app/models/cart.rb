@@ -11,6 +11,15 @@ class Cart
     end
   end
 
+  def all_items_not_array
+    items_ids = @contents.keys.map(&:to_i)
+    Item.where(id: items_ids)
+  end
+
+  def count_of_items_from_same_merchant(item)
+    all_items_not_array.where(merchant_id: item.merchant_id).count
+  end
+
   def total_item_count
     @contents.values.sum
   end
@@ -36,6 +45,7 @@ class Cart
 
   def subtotal_with_discount(item_id)
     item = Item.find(item_id)
+
     subtotal_without_discount(item_id) - calculate_discount(item)
 
   end
@@ -55,11 +65,13 @@ class Cart
     end
   end
 
+
+
   def calculate_discount(item)
     discount = find_discount(item)
     if discount ##if find_discount did not return nil, calculate the amount
       if discount.discount_type == 'dollar'
-        return discount.discount_amount
+        return (discount.discount_amount / count_of_items_from_same_merchant(item))
       elsif discount.discount_type =='percentage'
         percentage_off = discount.discount_amount.to_f/100
         return subtotal_without_discount(item.id) * percentage_off

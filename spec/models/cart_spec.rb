@@ -107,6 +107,65 @@ RSpec.describe Cart do
     expect(cart.grand_total).to eq(312.50)
   end
 
+  describe 'grand total only substracts dollar discount from one item' do
+    it 'only substracts the dollar discount once' do
+
+      merchant_1 = create(:merchant)
+
+      item_1 = create(:item, user: merchant_1, price: 25)
+      item_2 = create(:item, user: merchant_1, price: 100)
+
+      # $20 off orders with $150 or more
+      merchant_1.discounts.create(discount_type: 0, quantity_for_discount: 150, discount_amount: 20)
+
+      cart = Cart.new({})
+
+      #Adding $125 worth of item_1
+      cart.add_item(item_1.id)
+      cart.add_item(item_1.id)
+      cart.add_item(item_1.id)
+      cart.add_item(item_1.id)
+      cart.add_item(item_1.id)
+
+      #Adds $200 to cart of item_2
+      cart.add_item(item_2.id)
+      cart.add_item(item_2.id)
+
+      #Cart total without discount = $325
+      #Discount is $20 off
+      #Grand total is $305
+
+      expect(cart.grand_total).to eq(305)
+    end
+  end
+
+  it '.all_items_not_array' do
+    item_1, item_2, item_3 = create_list(:item, 3)
+    cart = Cart.new({})
+    cart.add_item(item_1.id)
+    cart.add_item(item_2.id)
+
+    expect(cart.all_items_not_array).to eq([item_1, item_2])
+    expect(cart.all_items_not_array.class).to_not eq(Array)
+  end
+
+
+  it '.count_of_items_from_same_merchant' do
+    merchant = create(:merchant)
+    other_merchant = create(:merchant)
+    item_1 = create(:item, merchant_id: merchant.id)
+    item_2 = create(:item, merchant_id: merchant.id)
+    item_3 = create(:item, merchant_id: other_merchant.id)
+    cart = Cart.new({})
+    cart.add_item(item_1.id)
+    cart.add_item(item_2.id)
+    cart.add_item(item_3.id)
+
+    expect(cart.count_of_items_from_same_merchant(item_1)).to eq(2)
+    expect(cart.count_of_items_from_same_merchant(item_2)).to eq(2)
+    expect(cart.count_of_items_from_same_merchant(item_3)).to eq(1)
+  end
+
   it '.subtotal_from_same_merchant' do
     merchant_1 = create(:merchant)
     merchant_2 = create(:merchant)
@@ -188,7 +247,7 @@ RSpec.describe Cart do
       expect(cart.find_discount(item_1)).to eq(discount_1)
 
     end
-  end
+
   end
 
 
@@ -240,5 +299,6 @@ RSpec.describe Cart do
     expect(cart.subtotal_with_discount(item_2.id)).to eq(200)
 
   end
+end
 
 end

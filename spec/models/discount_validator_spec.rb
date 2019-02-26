@@ -34,7 +34,6 @@ RSpec.describe DiscountValidator do
         expect(discount_2.errors.messages).to eq({})
 
       end
-
     end
   end
 end
