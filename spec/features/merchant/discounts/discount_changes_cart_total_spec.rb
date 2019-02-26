@@ -155,7 +155,6 @@ RSpec.describe 'As a registered user', type: :feature do
           #No discounts applied is $830
           visit cart_path
           expect(page).to have_content("Total: $780.00")
-          save_and_open_page
 
 
         end
