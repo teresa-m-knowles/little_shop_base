@@ -59,7 +59,7 @@ class Cart
     discount = find_discount(item)
     if discount ##if find_discount did not return nil, calculate the amount
       if discount.discount_type == 'dollar'
-        return subtotal_without_discount - discount.discount_amount
+        return discount.discount_amount
       elsif discount.discount_type =='percentage'
         percentage_off = discount.discount_amount.to_f/100
         return subtotal_without_discount(item.id) * percentage_off

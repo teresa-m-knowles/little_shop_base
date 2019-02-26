@@ -83,16 +83,28 @@ RSpec.describe Cart do
     expect(cart.subtotal_without_discount(item_1.id)).to eq(item_1.price * cart.total_item_count)
   end
 
-  xit '.grand_total' do
-    item_1, item_2 = create_list(:item, 2)
+  it '.grand_total' do
+    merchant_1 = create(:merchant)
+
+    item_1 = create(:item, user: merchant_1, price: 25)
+    item_2 = create(:item, user: merchant_1, price: 100)
+    # 10% off orders with 5 or more of one item
+    merchant_1.discounts.create(discount_type: 1, quantity_for_discount: 5, discount_amount: 10)
+
     cart = Cart.new({})
+    # Cart has $125 of item 1
+    #Subtotal without discount is $125
+    #Subtotal with discount is  112.50
     cart.add_item(item_1.id)
     cart.add_item(item_1.id)
-    cart.add_item(item_2.id)
+    cart.add_item(item_1.id)
+    cart.add_item(item_1.id)
+    cart.add_item(item_1.id)
+
     cart.add_item(item_2.id)
     cart.add_item(item_2.id)
 
-    expect(cart.grand_total).to eq(cart.subtotal(item_1.id) + cart.subtotal(item_2.id))
+    expect(cart.grand_total).to eq(312.50)
   end
 
   it '.subtotal_from_same_merchant' do
@@ -182,10 +194,15 @@ RSpec.describe Cart do
 
   it '.calculate_discount' do
     merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
 
     item_1 = create(:item, user: merchant_1, price: 27)
+    item_2 = create(:item, user: merchant_2, price: 10)
+
     # 10% off orders with 5 or more of one item
-    merchant_1.discounts.create(discount_type: 1, quantity_for_discount: 5, discount_amount: 10)
+    merchant_1.discounts.create!(discount_type: 1, quantity_for_discount: 5, discount_amount: 10)
+    # $5 off orders with $20 or more
+    merchant_2.discounts.create!(discount_type: 0, quantity_for_discount: 20, discount_amount: 5)
 
     cart = Cart.new({})
     cart.add_item(item_1.id)
@@ -194,7 +211,11 @@ RSpec.describe Cart do
     cart.add_item(item_1.id)
     cart.add_item(item_1.id)
 
+    cart.add_item(item_2.id)
+    cart.add_item(item_2.id)
+
     expect(cart.calculate_discount(item_1)).to eq(13.50)
+    expect(cart.calculate_discount(item_2)).to eq(5)
   end
 
   it '.subtotal_with_discount' do
