@@ -42,12 +42,9 @@ class Cart
     subtract_item(item_id, count_of(item_id))
   end
 
-
   def subtotal_with_discount(item_id)
     item = Item.find(item_id)
-
     subtotal_without_discount(item_id) - calculate_discount(item)
-
   end
 
   def subtotal_without_discount(item_id)
@@ -64,8 +61,6 @@ class Cart
       subtotal_without_discount(item.id)
     end
   end
-
-
 
   def calculate_discount(item)
     discount = find_discount(item)
