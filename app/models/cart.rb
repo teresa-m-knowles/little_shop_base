@@ -33,7 +33,6 @@ class Cart
     subtract_item(item_id, count_of(item_id))
   end
 
-  #group all items by merchant id and add their subtotals
   def get_dollar_discounts
     merchant_id_subtotal = Hash.new(0)
 
@@ -51,35 +50,30 @@ class Cart
       end
       return discount
     end
+  end
 
-
-
-
+  def get_percentage_discounts
+    item_and_percentage = Hash.new(0)
+    @contents.each do |item_id, quantity|
+      item = Item.find(item_id.to_i)
+      item_and_percentage[item] = Discount.get_percentage_discount(item, quantity)
+    end
+    return item_and_percentage
 
   end
 
   def subtotal(item_id)
     item = Item.find(item_id)
-
-    # if merchant.discounts.empty?
+    total = 0
+    if get_percentage_discounts[item]
+      discount = get_percentage_discounts[item].discount_amount.to_f/100
+      without_discount = item.price * count_of(item_id)
+      discount_amount = without_discount * discount
+      total = without_discount - discount_amount
+    else
       total = item.price * count_of(item_id)
-    # else
-    #   type = merchant.discounts.pluck(:discount_type).first
-    #   if type == 'dollar'
-    #     total = item.price * count_of(item_id)
-    #     discount = Discount.dollar_check(item, total)
-    #     #should return nil if no dollar discount applies or the biggest dollar discount possible if it does
-    #     total -= discount.discount_amount
-    #
-    #   elsif type == 'percentage'
-    #     discount = Discount.percentage_check(item, count_of(item))
-    #     #should return nil if no % discount applies or the biggest % discount possible if it does
-    #     total = item.price * count_of(item_id)
-    #     total_discount = (discount.discount_amount/100) * total
-    #     total -= total_discount
-    #   end
-    # end
-   return total
+    end
+    return total
   end
 
 
@@ -92,8 +86,6 @@ class Cart
 
     if get_dollar_discounts
       total -= get_dollar_discounts.discount_amount
-    else
-      total
     end
     return total
   end

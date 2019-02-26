@@ -114,6 +114,53 @@ RSpec.describe 'As a registered user', type: :feature do
     end
 
     context 'Percentage type discounts' do
+      context 'and I add enough of one item to have a bulk discount' do
+        before :each do
+          @merchant = create(:merchant)
+          @item_1 = create(:item, user: @merchant, price: 25, inventory: 50)
+          @item_2 = create(:item, user: @merchant, price: 30, inventory: 50)
+          #10% off when you buy 20 items or more
+          @discount = @merchant.discounts.create(discount_type: 1, discount_amount: 10, quantity_for_discount: 20)
+          @customer = create(:user)
+          allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@customer)
+
+        end
+        it 'I get a discount on that item' do
+          #Add 20 of item 1
+          visit item_path(@item_1)
+          click_button "Add to Cart"
+          visit cart_path
+
+          19.times do
+            within "#item-#{@item_1.id}" do
+              click_button 'Add more to cart'
+            end
+          end
+          #Order subtotal: $500 with a 10% discount, so $450
+          #------------------------------------------------------------------
+          #Adds 11 of item 2
+          #
+          visit item_path(@item_2)
+          click_button "Add to Cart"
+          visit cart_path
+
+          10.times do
+            within "#item-#{@item_2.id}" do
+              click_button 'Add more to cart'
+            end
+          end
+          #Order subtotal $330
+          #---------------------------------------------------------------------
+          #Order total should be $780 with discount
+          #No discounts applied is $830
+          visit cart_path
+          expect(page).to have_content("Total: $780.00")
+          save_and_open_page
+
+
+        end
+
+      end
     end
   end
 end
