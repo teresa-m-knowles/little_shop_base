@@ -1,0 +1,33 @@
+
+  <% if @discount.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@discount.errors.count, "error") %> prohibited this discount from being saved:</h2>
+
+      <ul>
+      <% @discount.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<%=form_for @form_path do |f| %>
+
+  <p>
+  <%= label :discount_type, 'Dollar discount' %>
+  <%= f.radio_button(:discount_type, "dollar")%>
+
+  <%= f.label :discount_type, "Percentage discount" %>
+  <%= f.radio_button(:discount_type, "percentage")%>
+  </p>
+  <p>
+  <%= f.label :discount_amount %>
+  <%= f.number_field :discount_amount %>
+  </p>
+
+  <p>
+  <%= f.label :quantity_for_discount %>
+  <%= f.number_field :quantity_for_discount %>
+  </p>
+  <%= f.submit %>
+  <% end %>
