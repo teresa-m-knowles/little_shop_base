@@ -13,7 +13,7 @@ RSpec.describe 'As a merchant', type: :feature do
 
       fill_in "Discount amount", with: 150
       fill_in "Quantity for discount", with: 100
-      click_on "Update Discount"
+      click_on "Submit"
 
       expect(page).to have_content("You have updated the discount")
       expect(current_path).to eq(dashboard_discount_path(@discount_1))
@@ -32,7 +32,7 @@ RSpec.describe 'As a merchant', type: :feature do
         visit edit_dashboard_discount_path(discount_2)
 
         choose(option: 'percentage')
-        click_on "Update Discount"
+        click_on "Submit"
 
         expect(page).to_not have_content("You have updated the discount")
         expect(page).to have_content("All of your discounts need to be of the same type.")

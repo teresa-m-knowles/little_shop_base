@@ -1,6 +1,26 @@
-<h1>Discount ID# <%= @discount.id %> </h1>
-<p>Type: <%= @discount.discount_type.capitalize %> </p>
-<p>Quantity for discount: <%= @discount.quantity_for_discount %> </p>
-<p>Discount amount: <%= @discount.discount_amount %> </p>
-<%= link_to "Edit", edit_dashboard_discount_path(@discount)  %>
-<%= button_to "Delete", dashboard_discount_path(@discount), method: :delete, data: { confirm: "Are you sure?" }  %>
+<div class="container mt-5">
+
+<div class="card text-center border-info mb-10">
+  <div class="card-header">
+      <h3>Discount ID# <%= @discount.id %></h3>
+  </div>
+  <div class="card-body">
+    <h2 class="card-title"><%= discount_to_words(@discount) %></h2>
+    <section class="card-text">
+      <ul>
+      <h5>Type: <%= @discount.discount_type.capitalize %> </h5>
+      <h5>Quantity for discount: <%= @discount.quantity_for_discount %></h5>
+      <h5>Discount amount: <%= @discount.discount_amount %></h5>
+    </ul>
+
+    </section>
+    <button type="button" class="btn btn-info text-light">
+    <%= link_to "Edit", edit_dashboard_discount_path(@discount), class: "text-light"%>
+    </button>
+
+    <button type="button" class="btn btn-info text-light">
+      <%= link_to "Delete", dashboard_discount_path(@discount), method: :delete, data: { confirm: "Are you sure?" }, class: "text-light"  %>
+    </button>
+  </div>
+</div>
+</div>

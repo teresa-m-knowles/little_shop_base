@@ -1,20 +1,20 @@
-<h1>Your Shopping Cart</h1>
+<h1 class="text-center">Your Shopping Cart</h1>
 
 <% if @cart.contents.empty? %>
   <p>Your cart is empty</p>
 <% else %>
-  <p>Total: <%= number_to_currency(@cart.grand_total) %></p>
+  <p class="h6"> <strong>Total: </strong><%= number_to_currency(@cart.grand_total) %></p>
 
 
-  <%= button_to "Empty cart", cart_empty_path, method: :delete %>
+  <%= button_to "Empty cart", cart_empty_path, method: :delete, class:"btn btn-danger" %>
 
   <% if current_user %>
-    <%= button_to 'Check out', profile_orders_path %>
+    <%= button_to 'Check out', profile_orders_path, class:"btn btn-success" %>
   <% else %>
     You must
     <%= link_to 'register', registration_path %>
     or
-    <%= link_to 'log in', login_path %>
+    <%= link_to 'log in', login_path%>
     to check out.
   <% end %>
 
