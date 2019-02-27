@@ -23,14 +23,14 @@ RSpec.describe 'As a merchant' do
       click_link "View My Discounts"
 
       within("#discount-#{@discount_1.id}") do
-        expect(page).to have_content(@discount_1.discount_type)
+        expect(page).to have_content(@discount_1.discount_type.capitalize)
         expect(page).to have_content(@discount_1.quantity_for_discount)
         expect(page).to have_content(@discount_1.discount_amount)
       end
 
 
       within("#discount-#{@discount_2.id}") do
-        expect(page).to have_content(@discount_2.discount_type)
+        expect(page).to have_content(@discount_2.discount_type.capitalize)
         expect(page).to have_content(@discount_2.quantity_for_discount)
         expect(page).to have_content(@discount_2.discount_amount)
       end

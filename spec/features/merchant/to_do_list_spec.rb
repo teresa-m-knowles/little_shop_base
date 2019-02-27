@@ -98,15 +98,13 @@ RSpec.describe 'As a merchant', type: :feature do
         Item.destroy_all
         Order.destroy_all
 
-        new_item = create(:item, name: "Ocarina of Time", inventory: 10, user: @merchant)
+        new_item = create(:item, name: "Ocarina of Time", inventory: 10, user: @merchant, price: 10)
         new_item_2 = create(:item, name: "Majora", inventory: 10, user: @merchant)
         pending_order_4 = create(:order, user: @customer)
         pending_order_5 = create(:order, user: @customer)
         oi4 = create(:order_item, order: pending_order_4, item: new_item, quantity: 7)
         oi5 = create(:order_item, order: pending_order_5, item: new_item, quantity: 4)
         oi6 = create(:order_item, order: pending_order_5, item: new_item_2, quantity: 4)
-
-        binding.pry
 
         missed_revenue = @merchant.items.not_enough_in_stock.sum do |item|
           item.revenue
@@ -116,10 +114,30 @@ RSpec.describe 'As a merchant', type: :feature do
 
         visit dashboard_path(@merchant)
 
-
-        within('#to-do-list') do
+        within('#low-stock') do
           expect(page).to have_content("You have $110.00 worth of unfillable orders because you don't have enough of #{new_item.name}")
+          expect(page).to have_link("#{new_item.name}")
+          click_link("#{new_item.name}")
         end
+        expect(current_path).to eq(edit_dashboard_item_path(new_item))
+
+      end
+
+      it "I don't see a warning if the order item quantities does not exceed the stock" do
+        OrderItem.destroy_all
+        Item.destroy_all
+        Order.destroy_all
+
+        new_item = create(:item, name: "Ocarina of Time", inventory: 10, user: @merchant, price: 10)
+        new_item_2 = create(:item, name: "Majora", inventory: 10, user: @merchant)
+        pending_order_4 = create(:order, user: @customer)
+        pending_order_5 = create(:order, user: @customer)
+        oi4 = create(:order_item, order: pending_order_4, item: new_item, quantity: 7)
+        oi5 = create(:order_item, order: pending_order_5, item: new_item, quantity: 3)
+        oi6 = create(:order_item, order: pending_order_5, item: new_item_2, quantity: 4)
+
+        visit dashboard_path(@merchant)
+        expect(page).to_not have_content("You have $110.00 worth of unfillable orders because you don't have enough of #{new_item.name}")
       end
 
     end
