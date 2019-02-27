@@ -47,4 +47,14 @@ class Item < ApplicationRecord
       .where(fulfilled: true, orders: {status: :completed}, item_id: self.id)
       .count > 0
   end
+
+  def self.not_enough_in_stock
+    Item.joins(:order_items)
+        .where(order_items: {fulfilled: false})
+        .group(:id)
+        .select('items.*, sum(order_items.quantity * items.price) as revenue')
+        .having('sum(order_items.quantity) > inventory')
+
+
+  end
 end

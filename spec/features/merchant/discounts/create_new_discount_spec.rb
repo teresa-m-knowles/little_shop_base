@@ -25,7 +25,7 @@ RSpec.describe 'create new discount', type: :feature do
         choose(option: 'dollar')
         fill_in "Discount amount", with: 150
         fill_in "Quantity for discount", with: 200
-        click_on "Create Discount"
+        click_on "Submit"
 
         discount = Discount.last
 
@@ -41,7 +41,7 @@ RSpec.describe 'create new discount', type: :feature do
         choose(option: "dollar")
         fill_in "Discount amount", with: "string"
         fill_in "Quantity for discount", with: 200
-        click_on "Create Discount"
+        click_on "Submit"
         expect(page).to_not have_content("New discount created")
         expect(page).to have_content("Discount amount is not a number")
       end
@@ -51,7 +51,7 @@ RSpec.describe 'create new discount', type: :feature do
         visit new_dashboard_discount_path
         fill_in "Discount amount", with: 5
         fill_in "Quantity for discount", with: 200
-        click_on "Create Discount"
+        click_on "Submit"
         expect(page).to_not have_content("New discount created")
         expect(page).to have_content("Discount type can't be blank")
       end
@@ -64,7 +64,7 @@ RSpec.describe 'create new discount', type: :feature do
           choose(option: 'percentage')
           fill_in "Discount amount", with: 150
           fill_in "Quantity for discount", with: 200
-          click_on "Create Discount"
+          click_on "Submit"
 
           expect(page).to_not have_content("New discount created")
           expect(page).to have_content("All of your discounts need to be of the same type.")
@@ -83,7 +83,7 @@ RSpec.describe 'create new discount', type: :feature do
           choose(option: 'percentage')
           fill_in "Discount amount", with: 150
           fill_in "Quantity for discount", with: 200
-          click_on "Create Discount"
+          click_on "Submit"
 
           discount = Discount.last
 
