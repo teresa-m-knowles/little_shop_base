@@ -98,19 +98,25 @@ RSpec.describe 'As a merchant', type: :feature do
         Item.destroy_all
         Order.destroy_all
 
-        new_item = create(:item, name: "Ocarina of Time", inventory: 10, user: @merchant)
+        new_item = create(:item, name: "Ocarina of Time", inventory: 10, user: @merchant, price: 10)
         pending_order_4 = create(:order, user: @customer)
         pending_order_5 = create(:order, user: @customer)
         oi4 = create(:order_item, order: pending_order_4, item: new_item, quantity: 7)
         oi5 = create(:order_item, order: pending_order_5, item: new_item, quantity: 4)
 
+        missed_revenue = @merchant.items.not_enough_in_stock.sum do |item|
+          item.revenue
+        end
+
+        expect(missed_revenue).to eq(110)
+
         visit dashboard_path(@merchant)
 
         within('#to-do-list') do
-          expect(page).to have_content("Several orders combined exceed your current inventory of #{new_item.name}. You cannot fulfill them all.")
+          expect(page).to have_content("You have $110.00 worth of unfillable orders because you don't have enough of #{new_item.name}")
         end
-
       end
+
     end
-  end
+end
 end
