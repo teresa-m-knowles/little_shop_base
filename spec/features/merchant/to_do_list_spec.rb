@@ -116,7 +116,11 @@ RSpec.describe 'As a merchant', type: :feature do
 
         within('#low-stock') do
           expect(page).to have_content("You have $110.00 worth of unfillable orders because you don't have enough of #{new_item.name}")
+          expect(page).to have_link("#{new_item.name}")
+          click_link("#{new_item.name}")
         end
+        expect(current_path).to eq(edit_dashboard_item_path(new_item))
+
       end
 
       it "I don't see a warning if the order item quantities does not exceed the stock" do
@@ -133,7 +137,6 @@ RSpec.describe 'As a merchant', type: :feature do
         oi6 = create(:order_item, order: pending_order_5, item: new_item_2, quantity: 4)
 
         visit dashboard_path(@merchant)
-
         expect(page).to_not have_content("You have $110.00 worth of unfillable orders because you don't have enough of #{new_item.name}")
       end
 

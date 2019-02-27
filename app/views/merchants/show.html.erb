@@ -164,7 +164,7 @@
 
       <% unless @merchant.items.not_enough_in_stock.empty? %>
         <% @merchant.items.not_enough_in_stock.each do |item| %>
-          <li id="low-stock">You have <%= number_to_currency(item.revenue) %> worth of unfillable orders because you don't have enough of <%= item.name %></li>
+          <li id="low-stock">You have <%= number_to_currency(item.revenue) %> worth of unfillable orders because you don't have enough of <%= link_to item.name,  edit_dashboard_item_path(item)%></li>
         <% end %>
       <% end %>
 

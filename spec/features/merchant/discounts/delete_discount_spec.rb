@@ -19,9 +19,14 @@ RSpec.describe 'Delete a discount' do
         it 'the discount is deleted and I am redirected to the discounts index' do
           visit dashboard_discount_path(@discount_1)
 
-          click_button("Delete")
-          
+          click_link("Delete")
+          # page.driver.browser.switch_to.alert.accept
+          # page.driver.browser.accept_js_confirms
 
+
+          # page.accept_confirm do
+          #   click_link 'OK'
+          # end
           expect(@merchant.discounts.count).to eq(1)
           expect(current_path).to eq(dashboard_discounts_path)
           expect(page).to_not have_content(@discount_1.id)
