@@ -159,4 +159,23 @@ class User < ApplicationRecord
          .where(order_items: {fulfilled: false})
          .sum('order_items.quantity * order_items.price')
   end
+
+
+  # def enough
+  #   items.joins(:order_items)
+  #        .where(order_items: {fulfilled: false})
+  #        .group(:id)
+  #        .select('order_items.quantity AS demand, items.inventory AS total_stock')
+  #        .to_sql
+  # end
+
+  def enough
+    OrderItem.joins(:items)
+             .where(fulfilled: false)
+             .to_sql
+
+
+  end
+
+
 end
