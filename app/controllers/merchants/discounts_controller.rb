@@ -36,7 +36,7 @@ class Merchants::DiscountsController < ApplicationController
     flash[:success] = "Discount deleted"
     redirect_to dashboard_discounts_path
   end
-  
+
   def edit
     @discount = Discount.find(params[:id])
     @form_path = [:dashboard, @discount]

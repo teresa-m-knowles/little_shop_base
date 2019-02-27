@@ -161,13 +161,13 @@ class User < ApplicationRecord
   end
 
 
-  # def enough
-  #   items.joins(:order_items)
-  #        .where(order_items: {fulfilled: false})
-  #        .group(:id)
-  #        .select('order_items.quantity AS demand, items.inventory AS total_stock')
-  #        .to_sql
-  # end
+  def enough
+    items.joins(:order_items)
+         .where(order_items: {fulfilled: false})
+         .group(:id)
+         .select('order_items.quantity AS demand, items.inventory AS total_stock')
+         .to_sql
+  end
 
   def enough
     OrderItem.joins(:items)

@@ -1,3 +1,5 @@
-<h4>Create new discount</h4>
+<h2 class="text-center mt-5">Create new discount </h2>
 
-<%= render '/merchants/discounts/form' %>
+<%= form_for @form_path do |f| %>
+<%= render partial: '/merchants/discounts/form' , locals: {:f => f} %>
+<% end %>
