@@ -18,6 +18,36 @@ RSpec.describe Item, type: :model do
   end
 
   describe 'class methods' do
+    describe '.not_enough_in_stock' do
+      it 'returns an array of items for which the merchant does not have enough stock to fulfill the order items and the missed revenue' do
+        merchant = create(:merchant)
+        item_1 = create(:item, inventory: 10, user: merchant, price: 5)
+        item_2 = create(:item, inventory: 20, user: merchant, price: 7.35)
+        item_3 = create(:item, inventory: 30, user: merchant, price: 11.50)
+
+        customer = create(:user)
+        order_1 = create(:order, user: customer)
+        order_2 = create(:order, user: customer)
+        create(:order_item, order: order_1, item: item_1, quantity: 7)
+        create(:order_item, order: order_2, item: item_1, quantity: 4)
+
+        create(:order_item, order: order_1, item: item_2, quantity: 10)
+        create(:order_item, order: order_2, item: item_2, quantity: 13)
+
+        create(:order_item, order: order_1, item: item_3, quantity: 20)
+        create(:order_item, order: order_2, item: item_3, quantity: 10)
+
+        expect(merchant.items.not_enough_in_stock).to eq([item_1, item_2])
+
+        expect(merchant.items.not_enough_in_stock[0]).to eq(item_1)
+        expect(merchant.items.not_enough_in_stock[0].revenue).to eq(55)
+
+        expect(merchant.items.not_enough_in_stock[1]).to eq(item_2)
+        expect(merchant.items.not_enough_in_stock[1].revenue).to eq(169.05)
+
+    end
+
+    end
     describe 'item popularity' do
       before :each do
         merchant = create(:merchant)
