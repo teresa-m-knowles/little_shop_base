@@ -99,12 +99,17 @@ RSpec.describe 'As a merchant', type: :feature do
         Order.destroy_all
 
         new_item = create(:item, name: "Ocarina of Time", inventory: 10, user: @merchant)
+        new_item_2 = create(:item, name: "Majora", inventory: 10, user: @merchant)
         pending_order_4 = create(:order, user: @customer)
         pending_order_5 = create(:order, user: @customer)
         oi4 = create(:order_item, order: pending_order_4, item: new_item, quantity: 7)
         oi5 = create(:order_item, order: pending_order_5, item: new_item, quantity: 4)
+        oi6 = create(:order_item, order: pending_order_5, item: new_item_2, quantity: 4)
+
+        binding.pry
 
         visit dashboard_path(@merchant)
+
 
         within('#to-do-list') do
           expect(page).to have_content("Several orders combined exceed your current inventory of #{new_item.name}. You cannot fulfill them all.")
